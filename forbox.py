@@ -10,6 +10,14 @@ time=np.logspace(np.log10(2e-5),np.log10(10),100)
 newtime=np.logspace(np.log10(2e-5),np.log10(10),200)
 tt=np.logspace(np.log10(2e-5),np.log10(10),199)
 
+def derivative(x,y):
+    nx=len(x)
+    dy=np.zeros(nx)
+    # return (y[1:]-y[:-1])/(x[1:]-x[:-1])
+    for i in range(1,nx-2):
+        dy[i]=(y[i+1]-y[i-1])/(x[i+1]-x[i-1])
+    
+    return dy
 
 a=50
 b=1
@@ -37,11 +45,15 @@ for i in range(51):
         ynew2=f2(newtime)
         ynew3=f3(newtime)
         ynew4=f4(newtime)
-        tder=np.diff(np.log10(newtime))
-        der1=np.diff(ynew1)/tder
-        der2=np.diff(ynew2)/tder
-        der3=np.diff(ynew3)/tder
-        der4=np.diff(ynew4)/tder
+        # tder=np.diff(np.log10(newtime))
+        # der1=np.diff(ynew1)/tder
+        # der2=np.diff(ynew2)/tder
+        # der3=np.diff(ynew3)/tder
+        # der4=np.diff(ynew4)/tder
+        der1 = 2.302*newtime*derivative(newtime,ynew1)
+        der2 = 2.302*newtime*derivative(newtime,ynew2)
+        der3 = 2.302*newtime*derivative(newtime,ynew3)
+        der4 = 2.302*newtime*derivative(newtime,ynew4)
         
 
         fig, axs = plt.subplots(3)
@@ -59,10 +71,10 @@ for i in range(51):
 
 
 
-        axs[2].semilogx(tt[30:],abs(der1[30:]/max(abs(der1[30:]))),label=r'$\tau_{EM}$ (No IP)')
-        axs[2].semilogx(tt[30:],abs(der2[30:]/max(abs(der2[30:]))),label=r'$\tau_{EM}$ ($\eta$=0.4 $\tau$=0.3)',linestyle='--')
-        axs[2].semilogx(tt[30:],abs(der3[30:]/max(abs(der3[30:]))),label=r'$\tau_{EM}$ ($\eta$=0.4 $\tau$=0.5)',linestyle='-.')
-        axs[2].semilogx(tt[30:],abs(der4[30:]/max(abs(der4[30:]))),label=r'$\tau_{EM}$ ($\eta$=0.4 $\tau$=0.7)',linestyle='-.')
+        axs[2].semilogx(newtime[30:],abs(der1[30:]/max(abs(der1[30:]))),label=r'$\tau_{EM}$ (No IP)')
+        axs[2].semilogx(newtime[30:],abs(der2[30:]/max(abs(der2[30:]))),label=r'$\tau_{EM}$ ($\eta$=0.4 $\tau$=0.3)',linestyle='--')
+        axs[2].semilogx(newtime[30:],abs(der3[30:]/max(abs(der3[30:]))),label=r'$\tau_{EM}$ ($\eta$=0.4 $\tau$=0.5)',linestyle='-.')
+        axs[2].semilogx(newtime[30:],abs(der4[30:]/max(abs(der4[30:]))),label=r'$\tau_{EM}$ ($\eta$=0.4 $\tau$=0.7)',linestyle='-.')
         
         axs[0].legend(loc="upper right")
         axs[1].legend(loc="upper right")
